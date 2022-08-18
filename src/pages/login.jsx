@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
 import {Form, Button} from 'react-bootstrap';
 
+
 function Login(props) {
   const [employee,setEmployee] =useState([]) 
   const [account, setAccount]=useState('')
@@ -29,7 +30,6 @@ function Login(props) {
           if (user[0] !== undefined) {
             localStorage.setItem('name', user[0].name);
             localStorage.setItem('id', user[0].id);
-            navigate('/clock')
           } else {
             feedback = '帳號或密碼輸入錯誤'
           }

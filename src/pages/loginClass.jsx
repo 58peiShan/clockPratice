@@ -1,13 +1,12 @@
 import React, { Component, useEffect } from "react";
-import { useState } from "react";
-import {NavLink } from "react-router-dom";
+import { NavLink, Navigate  } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
-
 class LoginClass extends Component {
   constructor(props) {
     super(props);
     this.login = this.login.bind(this);
     this.state = {
+      user:null,
       employee: [],
       account: "",
       password: "",
@@ -27,8 +26,8 @@ class LoginClass extends Component {
       if (user[0] !== undefined) {
         localStorage.setItem("name", user[0].name);
         localStorage.setItem("id", user[0].id);
-        //沒找到轉址方法
-        window.location.href = '/clock'
+        console.log(this);
+        this.setState({ user:true });
       } else {
         feedback = "帳號或密碼輸入錯誤";
       }
@@ -47,11 +46,8 @@ class LoginClass extends Component {
       });
   }
   render() {
-    
-    return localStorage.getItem("name") ? <><h2>您已登入</h2>
-    <NavLink to={'/clock'}>去打卡</NavLink>
-    </>:(
-  
+    let { user, error } = this.state;
+    return  (
       <Form className="w-25 mt-5 m-auto">
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>登入</Form.Label>
@@ -64,7 +60,9 @@ class LoginClass extends Component {
             }}
           />
         </Form.Group>
-
+              {user && (
+                <Navigate to="/clock" replace={true} />
+              )}
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Control
             type="password"
