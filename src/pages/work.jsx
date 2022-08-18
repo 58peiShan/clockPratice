@@ -62,10 +62,10 @@ function Work(props) {
           </div>
         </section>
 
-        <section class="content">
-          <div class="card">
-            <div class="card-body p-0">
-              <table class="table table-striped projects">
+        <section className="content">
+          <div className="card">
+            <div className="card-body p-0">
+              <table className="table table-striped projects">
                 <thead>
                   <tr>
                     <th>員工編號</th>
@@ -77,7 +77,11 @@ function Work(props) {
                 </thead>
                 {(list.length > 0)?
                 <>{ ListItem }</>
-              :<h3 className="text-center">暫無資料</h3>}
+              :<tbody className="text-center">
+                <tr>
+                  <td>暫無資料</td>
+                </tr>
+                </tbody>}
               </table>
             </div>
           </div>
