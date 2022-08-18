@@ -78,7 +78,7 @@ function CMS(props) {
         setAge(""),
         setPassword("")
       )
-      .then(alert("修改成功！"));
+      .then(alert("修改成功！")).then(setIsEdit(false));
   };
   const cancelEdit = () => {
     setIsEdit(false);
