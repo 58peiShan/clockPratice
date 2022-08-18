@@ -1,0 +1,98 @@
+{
+  "employee": [
+    {
+      "id": 1,
+      "name": "Anna",
+      "age": "32",
+      "password": "4556eee"
+    },
+    {
+      "id": 3,
+      "name": "Joy",
+      "age": "26",
+      "password": "abc999"
+    },
+    {
+      "id": 4,
+      "name": "PopStar",
+      "age": "22",
+      "password": "wwwweee"
+    },
+    {
+      "id": 5,
+      "name": "Josh",
+      "age": "45",
+      "password": "ffjosh"
+    },
+    {
+      "id": 6,
+      "name": "Wendy",
+      "age": "28",
+      "password": "0221"
+    },
+    {
+      "id": 7,
+      "name": "Gogo",
+      "age": "99",
+      "password": "9999"
+    }
+  ],
+  "clock": [
+    {
+      "id": 1,
+      "empId": 1,
+      "name": "Anna",
+      "date": "2022/8/16",
+      "In": "上午9:01:33",
+      "Off": "下午4:53:58"
+    },
+    {
+      "id": 2,
+      "empId": 3,
+      "name": "Joy",
+      "date": "2022/8/17",
+      "In": "上午9:56:33",
+      "Off": "下午2:41:07"
+    },
+    {
+      "id": 5,
+      "empId": 5,
+      "name": "Josh",
+      "date": "2022/8/16",
+      "In": "下午1:06:03",
+      "Off": "下午1:06:07"
+    },
+    {
+      "id": 6,
+      "empId": "4",
+      "name": "PopStar",
+      "date": "2022/8/17",
+      "In": "下午3:17:39",
+      "Off": "下午5:28:36"
+    },
+    {
+      "empId": "1",
+      "name": "Anna",
+      "date": "2022/8/17",
+      "In": "下午4:36:12",
+      "id": 7,
+      "Off": "下午5:22:48"
+    },
+    {
+      "empId": "5",
+      "name": "Josh",
+      "date": "2022/8/17",
+      "In": "下午5:26:13",
+      "id": 8,
+      "Off": "下午5:26:16"
+    },
+    {
+      "empId": "3",
+      "name": "Joy",
+      "date": "2022/8/18",
+      "In": "上午10:03:51",
+      "id": 9,
+      "Off": "上午10:20:35"
+    }
+  ]
+}
