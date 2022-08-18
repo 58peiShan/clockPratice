@@ -9,7 +9,7 @@ function CMS(props) {
   const [isEdit, setIsEdit] = useState(false);
   const [list, setList] = useState([]);
   const [name, setName] = useState("");
-  const [age, setAge] = useState();
+  const [age, setAge] = useState(0);
   const [password, setPassword] = useState("");
 
   useEffect(() => {
@@ -132,6 +132,7 @@ function CMS(props) {
                 <h3>員工列表</h3>
                 <NavLink to="/work">出勤紀錄</NavLink>
               </div>
+              
               <Form className="col-sm-6">
                 <Form.Control
                   placeholder="員工姓名"
@@ -145,6 +146,7 @@ function CMS(props) {
                   type="number"
                   aria-label="age"
                   value={age}
+                  min="1" max="99"
                   aria-describedby="basic-addon1"
                   onChange={(e) => setAge(e.target.value)}
                 />
@@ -177,17 +179,15 @@ function CMS(props) {
             </div>
           </div>
         </section>
-        <section class="content">
-          <div class="card">
-            <div class="card-body p-0">
-              <table class="table table-striped projects">
+        <section className="content">
+          <div className="card">
+            <div className="card-body p-0">
+              <table className="table table-striped projects">
                 <thead>
                   <tr>
                     <th>員工編號</th>
                     <th>姓名</th>
                     <th>年齡</th>
-                    {/* <th>上班</th>
-                  <th>下班</th> */}
                     <th>動作</th>
                   </tr>
                 </thead>
