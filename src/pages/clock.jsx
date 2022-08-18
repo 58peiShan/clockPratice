@@ -20,7 +20,7 @@ function Clock(props) {
       });
   }, [isListCgange]);
 
-  let myrecord = list.filter((x) => x.name == userName && x.date == date);
+  let myrecord = list.filter((x) => x.name === userName && x.date === date);
  
   const listItem = myrecord.map((v, i) => (
     <tr key={i}>
@@ -31,7 +31,7 @@ function Clock(props) {
     </tr>
   ));
   function handleIn() {
-    const hasIn = list.filter((x) => x.date == date && x.name == userName);
+    const hasIn = list.filter((x) => x.date === date && x.name === userName);
     console.log(hasIn);
     if (hasIn.length > 0 ) {
        alert("今日已有簽到紀錄");

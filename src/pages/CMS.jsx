@@ -21,7 +21,7 @@ function CMS(props) {
   }, [name,isListCgange]);
 
   function add() {
-    if(name != ""){
+    if(name !== ""){
       fetch(`http://localhost:3001/employee/`, {
         method: "POST",
         headers: {

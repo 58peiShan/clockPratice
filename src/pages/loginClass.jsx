@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { Component} from "react";
 import { NavLink, Navigate  } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 class LoginClass extends Component {
@@ -46,7 +46,7 @@ class LoginClass extends Component {
       });
   }
   render() {
-    let { user, error } = this.state;
+    let { user } = this.state;
     return  (
       <Form className="w-25 mt-5 m-auto">
         <Form.Group className="mb-3" controlId="formBasicEmail">

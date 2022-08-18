@@ -27,6 +27,7 @@ function Login(props) {
           let user = employee.filter(x => x.name === account && x.password === password)
           console.log(employee);
           console.log(user);
+          navigate('/clock')
           if (user[0] !== undefined) {
             localStorage.setItem('name', user[0].name);
             localStorage.setItem('id', user[0].id);
