@@ -1,9 +1,10 @@
 import React, { Component} from "react";
-import { NavLink, Navigate  } from "react-router-dom";
+import { NavLink, Navigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 class LoginClass extends Component {
   constructor(props) {
     super(props);
+    // 不必要
     this.login = this.login.bind(this);
     this.state = {
       user:null,
@@ -18,6 +19,7 @@ class LoginClass extends Component {
     e.preventDefault();
     let feedback;
     if (this.state.account !== "" && this.state.password !== "") {
+      // find filter some every includes > api使用時機
       let user = this.state.employee.filter(
         (x) =>
           x.name === this.state.account && x.password === this.state.password
@@ -38,7 +40,8 @@ class LoginClass extends Component {
   };
 
   componentDidMount() {
-    fetch(`http://localhost:3001/employee`)
+    // 直接讓user看所有員工帳密?
+    fetch(`http://localhost:8001/employee`)
       .then((res) => res.json())
       .then((data) => {
         this.setState({ employee: data });
@@ -60,6 +63,7 @@ class LoginClass extends Component {
             }}
           />
         </Form.Group>
+        {/* withRouter */}
               {user && (
                 <Navigate to="/clock" replace={true} />
               )}

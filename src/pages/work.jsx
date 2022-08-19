@@ -7,8 +7,9 @@ function Work(props) {
   const [list, setList] = useState([]);
   const [forsearchList, setForsearchList] = useState([]);
   const [date, setDate] = useState();
+  // 使用1次，不太需事先定義
   const getRecord = () => {
-    fetch(`http://localhost:3001/clock`)
+    fetch(`http://localhost:8001/clock`)
       .then((res) => res.json())
       .then((data) => {
         setList(data);
@@ -18,8 +19,9 @@ function Work(props) {
   useEffect(() => {
     getRecord();
   }, []);
-
+  // 直接按查詢就掛了
   const update = () => {
+    // /-0?/
     const a = date.replace(/-0/g, "/");
     const b = a.replace(/-/g, "/");
     let recordByDate = forsearchList.filter((x) => x.date === b);
@@ -28,6 +30,7 @@ function Work(props) {
   const ListItem = list.map((v, i) => (
     <tbody key={i}>
       <tr>
+        {/* v.empId */}
         <td>{list[i].empId}</td>
         <td>{list[i].name}</td>
         <td>{list[i].date}</td>

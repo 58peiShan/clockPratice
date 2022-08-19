@@ -5,6 +5,8 @@ import { Form, Container, Button } from "react-bootstrap";
 
 function CMS(props) {
   const [id, setId] = useState();
+  // 1. cgange 拼錯?
+  // 2. isListCgange 、 isEdit 直接使用布林
   const [isListCgange, setIsListCgange] = useState("false");
   const [isEdit, setIsEdit] = useState("false");
   const [list, setList] = useState([]);
@@ -13,34 +15,35 @@ function CMS(props) {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    fetch(`http://localhost:3001/employee`)
+    // name, isListCgange 更新就要打一次api?
+    fetch(`http://localhost:8001/employee`)
       .then((res) => res.json())
       .then((data) => {
         setList(data);
       });
-  }, [name,isListCgange]);
+  }, [isListCgange]);
 
   function add() {
-    if(name !== ""){
-      fetch(`http://localhost:3001/employee/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          id: "",
-          name: `${name}`,
-          age: `${age}`,
-          password: `${password}`,
-        }),
-      })
-      .then(setIsListCgange(!isListCgange),setName(''),setAge(''),setPassword(''))
-    }else{
-    alert('請輸入內容')
+    if(name != ""){
+        fetch(`http://localhost:8001/employee/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            id: "",
+            name: `${name}`,
+            age: `${age}`,
+            password: `${password}`,
+          }),
+        })
+        .then(setIsListCgange(!isListCgange),setName(''),setAge(''),setPassword(''))
+      }else{
+      alert('請輸入內容')
+    }
   }
-  }
-    
+
     const toEdit=(e)=>{
     let id = e.target.parentNode.parentNode.firstChild.innerText;
     let editObj = list.filter(x=>x.id == id)[0]
@@ -51,13 +54,15 @@ function CMS(props) {
     setPassword(editObj.password)
     console.log(isEdit);
   }
+  // e 未使用
 const edit=(e)=>{
-    fetch(`http://localhost:3001/employee/${id}`,{
+    fetch(`http://localhost:8001/employee/${id}`,{
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+      // 可簡寫
       body: JSON.stringify({
         id: `${id}`,
         name: `${name}`,
@@ -72,7 +77,7 @@ const cancelEdit = ()=>{
   setAge('')
   setPassword('');
 }
-  
+
 
   const listItem = list.map((v, i) => (
     <tbody key={i}>
@@ -87,12 +92,13 @@ const cancelEdit = ()=>{
           <Button
             className="btn btn-danger btn-sm"
             onClick={() =>
-              fetch(`http://localhost:3001/employee/${list[i].id}`, {
+              fetch(`http://localhost:8001/employee/${list[i].id}`, {
                 method: "DELETE",
                 headers: {
                   "Content-Type": "application/json",
                   Accept: "application/json",
                 },
+                // 不須``
                 body: JSON.stringify({ id: `${list[i].id}` }),
               }).then(setIsListCgange(!isListCgange))
             }
@@ -123,6 +129,7 @@ const cancelEdit = ()=>{
                   aria-describedby="basic-addon1"
                   onChange={(e) => setName(e.target.value)}
                 />
+                {/* 年齡可以輸入中文 */}
                 <Form.Control
                   placeholder="年齡"
                   type="number"
@@ -153,11 +160,12 @@ const cancelEdit = ()=>{
                   新增
                 </Button>
                 }
-               
+
               </Form>
             </div>
           </div>
         </section>
+        {/* class ?? */}
         <section class="content">
           <div class="card">
             <div class="card-body p-0">

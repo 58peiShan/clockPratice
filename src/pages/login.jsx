@@ -5,14 +5,14 @@ import {Form, Button} from 'react-bootstrap';
 
 
 function Login(props) {
-  const [employee,setEmployee] =useState([]) 
+  const [employee,setEmployee] =useState([])
   const [account, setAccount]=useState('')
   const [password, setPassword]=useState('')
   const [logintext, setLoginText]=useState('')
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:3001/employee`)
+    fetch(`http://localhost:8001/employee`)
       .then((res) => res.json())
       .then((data) => {
         setEmployee(data);
@@ -43,8 +43,8 @@ function Login(props) {
   return localStorage.getItem("name") ? <>您已登入
   <NavLink to={'/clock'}>去打卡</NavLink>
   </>:(
-    
-    <Form className="w-25 mt-5 m-auto"> 
+
+    <Form className="w-25 mt-5 m-auto">
     <Form.Group className="mb-3" controlId="formBasicEmail">
       <Form.Label>登入</Form.Label>
       <Form.Control type="text" placeholder="name" value={account} onChange={(e)=>{setAccount(e.target.value)

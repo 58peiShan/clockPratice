@@ -3,15 +3,20 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 import { useState } from "react";
 function Clock(props) {
+  // false
   const [isListCgange, setIsListCgange] = useState("flase");
   const userName = localStorage.getItem("name");
+
   const userId = localStorage.getItem("id");
   const [list, setList] = useState([]);
   const date = new Date().toLocaleDateString();
+  // 頁面停頓很久，打卡(上下班)的時間會不準
   const now = new Date().toLocaleTimeString();
   const navigate = useNavigate();
   useEffect(() => {
-    fetch(`http://localhost:3001/clock/`)
+
+    // 一次取所有資料多餘
+    fetch(`http://localhost:8001/clock/`)
       .then((res) => res.json())
       .then((data) => {
         setList(data);
@@ -20,10 +25,12 @@ function Clock(props) {
       });
   }, [isListCgange]);
 
+  // 不須每次重新render，list改變後再filter即可
   let myrecord = list.filter((x) => x.name === userName && x.date === date);
- 
+  // 這不須提取(1. 內容較簡單 2. 只用一次)
   const listItem = myrecord.map((v, i) => (
     <tr key={i}>
+      {/* v.empId 即可 */}
       <td>{myrecord[i].empId}</td>
       <td>{myrecord[i].name}</td>
       <td>{myrecord[i].In}</td>
@@ -31,16 +38,19 @@ function Clock(props) {
     </tr>
   ));
   function handleIn() {
+
     const hasIn = list.filter((x) => x.date === date && x.name === userName);
     console.log(hasIn);
+    // list.include
     if (hasIn.length > 0 ) {
        alert("今日已有簽到紀錄");
-    } else {fetch(`http://localhost:3001/clock`, {
+    } else {fetch(`http://localhost:8001/clock`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
+        // 縮寫
         body: JSON.stringify({
           empId: `${userId}`,
           name: `${userName}`,
@@ -52,12 +62,12 @@ function Clock(props) {
         .then(alert("打卡成功"))
         .catch("打卡失敗");
       console.log(now);
-     
+
     }
   }
   function handleLeave() {
   const id = myrecord[0].id
-    fetch(`http://localhost:3001/clock/${id}`, {
+    fetch(`http://localhost:8001/clock/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -76,7 +86,7 @@ function Clock(props) {
     localStorage.clear();
     navigate("/");
   };
-
+  // 第8行有定義了
   return localStorage.getItem("name") ? (
     <Container>
       <h1>{date}</h1>
