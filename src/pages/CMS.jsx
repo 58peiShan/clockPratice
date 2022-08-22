@@ -50,6 +50,7 @@ function CMS(props) {
   }
 
   const toEdit = (e) => {
+    // 盡量少操作DOM，可改用useRef
     let id = e.target.parentNode.parentNode.firstChild.innerText;
     let editObj = list.filter((x) => x.id === id * 1)[0];
     setIsEdit(true);
@@ -79,6 +80,7 @@ function CMS(props) {
         setAge(""),
         setPassword("")
       )
+      // .than 參數需要放function，可參考https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
       .then(alert("修改成功！")).then(setIsEdit(false));
   };
   const cancelEdit = () => {
@@ -95,6 +97,7 @@ function CMS(props) {
   }
 
   const listItem = list.map((v, i) => (
+    // tbody在table中只能出現一個，目前出現多個
     <tbody key={i}>
       <tr>
         <td>{v.id}</td>
@@ -114,6 +117,7 @@ function CMS(props) {
                   Accept: "application/json",
                 },
                 body: JSON.stringify({ id: v.id}),
+                // .than 參數需要放function
               }).then(setIsListChange(!isListChange))
             }
           >
@@ -137,7 +141,7 @@ function CMS(props) {
                 <h3>員工列表</h3>
                 <NavLink to="/work">出勤紀錄</NavLink>
               </div>
-              
+
               <Form className="col-sm-6">
                 <Form.Control
                   placeholder="員工姓名"
@@ -160,7 +164,7 @@ function CMS(props) {
                     console.log(e.target.value)
                     }
                   }
-          
+
                     />
                 <Form.Control
                   placeholder="預設密碼"

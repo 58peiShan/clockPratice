@@ -5,6 +5,7 @@ import { Form, Container, Button } from "react-bootstrap";
 
 function Work(props) {
   const [list, setList] = useState([]);
+  // forsearchList 不須使用useState，該變數不參與畫面render，使用useRef
   const [forsearchList, setForsearchList] = useState([]);
   const [date, setDate] = useState();
 
@@ -29,6 +30,7 @@ if(date){
 }
   };
   const ListItem = list.map((v, i) => (
+    // tbody在table中只能出現一個，目前出現多個
     <tbody key={i}>
       <tr>
         <td>{v.empId}</td>
@@ -82,6 +84,7 @@ if(date){
                 <>{ ListItem }</>
               :<tbody className="text-center">
                 <tr>
+                  {/* 畫面只占一個欄位 */}
                   <td>暫無資料</td>
                 </tr>
                 </tbody>}
