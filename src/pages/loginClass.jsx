@@ -1,4 +1,5 @@
 import React, { Component} from "react";
+import { flushSync} from "react-dom";
 import { NavLink, Navigate  } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 class LoginClass extends Component {
@@ -13,28 +14,39 @@ class LoginClass extends Component {
     };
   }
 
-  login = (e) => {
+   login =(e) => {
     e.preventDefault();
     let feedback;
    //先拿到值再到JSON server比對
     if (this.state.account !== "" && this.state.password !== "") {
-      fetch(`http://localhost:3001/employee?name=${this.state.account}`)
+        fetch(`http://localhost:3001/employee?name=${this.state.account}`)
       .then((res) => res.json())
       .then((data) => {
-        this.setState({ employee: data});
-      });
-      if (this.state.employee.length > 0) {
+        console.log('login',data);
+        flushSync(() => {
+          this.setState({ employee : data });
+        });
+      //  this.setState((data)=>{
+      //   return{
+      //    employee:[employee:data]
+      //   }
+      //   })
         console.log(this.state.employee);
+      }).then(()=>{
+        if (this.state.employee.length > 0 && this.state.employee[0].name === this.state.account && this.state.employee[0].password === this.state.password) {
         localStorage.setItem("name", this.state.employee[0].name);
         localStorage.setItem("id", this.state.employee[0].id);
         this.setState({ user:true });
       } else {
         feedback = "帳號或密碼輸入錯誤";
+        this.setState({ logintext: feedback });
       }
+      });
     } else {
       feedback = "請輸入帳號或密碼";
+      this.setState({ logintext: feedback });
     }
-    this.setState({ logintext: feedback });
+    
   };
 
   render() {
