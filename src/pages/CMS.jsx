@@ -1,16 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { Form, Container, Button } from "react-bootstrap";
 
 function CMS(props) {
-  const [id, setId] = useState();
+  const id = '';
   const [isListChange, setIsListChange] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [list, setList] = useState([]);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [password, setPassword] = useState("");
+  const idRef = useRef(null);
+
+  // useEffect(() => {
+  //   idRef.current.children[0].focus();
+  // }, []);
 
   useEffect(() => {
     fetch(`http://localhost:3001/employee`)
@@ -36,27 +41,34 @@ function CMS(props) {
           age,
           password,
         }),
-      })
-        .then(() => {
-          setIsListChange(!isListChange)
-          console.log(`add => ${isListChange}`)
-          setName("")
-          setAge("")
-          setPassword("")
-        })
+      }).then(() => {
+        setIsListChange(!isListChange);
+        console.log(`add => ${isListChange}`);
+        setName("");
+        setAge("");
+        setPassword("");
+      });
     } else {
-      alert("請檢查內容或格式");
+      alert("請輸入內容");
     }
   }
 
+  const setRef = useCallback((node)=>{
+    idRef.current = node;
+    console.log(idRef.current);
+  },[])
+
+
   const toEdit = (e) => {
-    let id = e.target.parentNode.parentNode.firstChild.innerText;
-    let editObj = list.filter((x) => x.id === id * 1)[0];
-    setIsEdit(true);
-    setId(id);
-    setName(editObj.name);
-    setAge(editObj.age);
-    setPassword(editObj.password);
+    let id = idRef.current;
+    console.log(id);
+    // let id = e.target.parentNode.parentNode.firstChild.innerText;
+    // let editObj = list.filter((x) => x.id === id * 1)[0];
+    // setIsEdit(true);
+    // setId(id);
+    // setName(editObj.name);
+    // setAge(editObj.age);
+    // setPassword(editObj.password);
     //console.log(`編輯中嗎？${isEdit}`);
   };
   const edit = () => {
@@ -73,13 +85,14 @@ function CMS(props) {
         password,
       }),
     })
-      .then(
-        setIsListChange(!isListChange),
-        setName(""),
-        setAge(""),
+      .then(()=>{
+        setIsListChange(!isListChange)
+        setName("")
+        setAge("")
         setPassword("")
+      })
+      .then(()=>{alert("修改成功！") },setIsEdit(false) 
       )
-      .then(alert("修改成功！")).then(setIsEdit(false));
   };
   const cancelEdit = () => {
     setIsEdit(false);
@@ -87,41 +100,39 @@ function CMS(props) {
     setAge("");
     setPassword("");
   };
-//沒有反應
-  const handleKeyDown = e=>{
-   if(e.key === 'E'){
-    return false
+  //沒有用
+  const handleKeyDown = (e) => {
+    if (e.key === "+") {
+      return false
     }
-  }
+  };
 
   const listItem = list.map((v, i) => (
-    <tbody key={i}>
-      <tr>
-        <td>{v.id}</td>
-        <td>{v.name}</td>
-        <td>{v.age}</td>
-        <td className="project-actions text-right">
-          <Button className="btn btn-primary btn-sm " onClick={toEdit}>
-            修改
-          </Button>
-          <Button
-            className="btn btn-danger btn-sm"
-            onClick={() =>
-              fetch(`http://localhost:3001/employee/${v.id}`, {
-                method: "DELETE",
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                },
-                body: JSON.stringify({ id: v.id}),
-              }).then(setIsListChange(!isListChange))
-            }
-          >
-            刪除
-          </Button>
-        </td>
-      </tr>
-    </tbody>
+    <tr key={i} ref={idRef}>
+      <td >{v.id}</td>
+      <td>{v.name}</td>
+      <td>{v.age}</td>
+      <td className="project-actions text-right">
+        <Button className="btn btn-primary btn-sm " onClick={toEdit}>
+          修改
+        </Button>
+        <Button
+          className="btn btn-danger btn-sm"
+          onClick={() =>
+            fetch(`http://localhost:3001/employee/${v.id}`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify({ id: v.id }),
+            }).then(()=>{setIsListChange(!isListChange)})
+          }
+        >
+          刪除
+        </Button>
+      </td>
+    </tr>
   ));
 
   return (
@@ -137,7 +148,7 @@ function CMS(props) {
                 <h3>員工列表</h3>
                 <NavLink to="/work">出勤紀錄</NavLink>
               </div>
-              
+
               <Form className="col-sm-6">
                 <Form.Control
                   placeholder="員工姓名"
@@ -151,17 +162,17 @@ function CMS(props) {
                   type="number"
                   aria-label="age"
                   value={age}
-                  min="1" max="99"
+                  min="1"
                   aria-describedby="basic-addon1"
                   onKeyDown={handleKeyDown}
                   onChange={(e) => {
-                    if(e.target.value.length === 3 ) {return false}
-                       setAge(e.target.value)
-                    console.log(e.target.value)
+                    if (e.target.value.length === 3) {
+                      return false;
                     }
-                  }
-          
-                    />
+                    setAge(e.target.value);
+                    console.log(e.target.value);
+                  }}
+                />
                 <Form.Control
                   placeholder="預設密碼"
                   type="text"
@@ -203,7 +214,7 @@ function CMS(props) {
                     <th>動作</th>
                   </tr>
                 </thead>
-                {listItem}
+                <tbody>{listItem}</tbody>
               </table>
             </div>
           </div>

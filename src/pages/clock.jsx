@@ -44,8 +44,8 @@ function Clock(props) {
           In: `${now}`,
         }),
       })
-        .then(setIsListCgange(!isListCgange))
-        .then(alert("打卡成功"))
+        .then(()=>{setIsListCgange(!isListCgange)})
+        .then(()=>{alert("打卡成功")})
         .catch("打卡失敗");
       console.log(now);
     }
@@ -63,8 +63,8 @@ function Clock(props) {
         Off: `${now}`,
       }),
     })
-      .then(setIsListCgange(!isListCgange))
-      .then(alert("簽退成功"))
+      .then(()=>{setIsListCgange(!isListCgange)})
+      .then(()=>{alert("簽退成功")})
       .catch("簽退失敗");
   }
 

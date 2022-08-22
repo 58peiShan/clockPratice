@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Form, Container, Button } from "react-bootstrap";
 
 function Work(props) {
   const [list, setList] = useState([]);
-  const [forsearchList, setForsearchList] = useState([]);
+  // 更改為useRef
+  const forsearchList = useRef([]);
   const [date, setDate] = useState();
 
   useEffect(() => {
@@ -13,31 +14,30 @@ function Work(props) {
       .then((res) => res.json())
       .then((data) => {
         setList(data);
-        setForsearchList(data);
+        forsearchList.current = data;
+        console.log(forsearchList.current);
       });
   }, []);
 
   const update = () => {
 if(date){
   const searchDate = date.replace(/-0?/g, "/");
-    // const a = date.replace(/-0/g, "/");
-    // const b = a.replace(/-/g, "/");
-    let recordByDate = forsearchList.filter((x) => x.date === searchDate);
+    let recordByDate = forsearchList.current.filter((x) => x.date === searchDate);
     setList(recordByDate);
 }else{
   alert('請先選擇日期')
 }
   };
   const ListItem = list.map((v, i) => (
-    <tbody key={i}>
-      <tr>
+// tbody不進行map
+      <tr key={i}>
         <td>{v.empId}</td>
         <td>{v.name}</td>
         <td>{v.date}</td>
         <td>{v.In}</td>
         <td>{v.Off}</td>
       </tr>
-    </tbody>
+
   ));
 
   return (
@@ -79,10 +79,11 @@ if(date){
                   </tr>
                 </thead>
                 {(list.length > 0)?
-                <>{ ListItem }</>
+                <tbody>{ ListItem }</tbody>
               :<tbody className="text-center">
                 <tr>
-                  <td>暫無資料</td>
+                   {/* 修正只占一個欄位 */}
+                  <td colSpan="5">暫無資料</td>
                 </tr>
                 </tbody>}
               </table>
