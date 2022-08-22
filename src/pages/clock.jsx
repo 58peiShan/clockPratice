@@ -8,34 +8,30 @@ function Clock(props) {
   const userId = localStorage.getItem("id");
   const [list, setList] = useState([]);
   const date = new Date().toLocaleDateString();
-  const now = new Date().toLocaleTimeString();
   const navigate = useNavigate();
   useEffect(() => {
-    fetch(`http://localhost:3001/clock/`)
+    //改成取單筆
+    fetch(`http://localhost:3001/clock/?date=${date}`)
       .then((res) => res.json())
       .then((data) => {
-        setList(data);
-        console.log(data);
-        console.log(date);
+        setList(data[0]);
       });
   }, [isListCgange]);
 
-  let myrecord = list.filter((x) => x.name === userName && x.date === date);
- 
-  const listItem = myrecord.map((v, i) => (
-    <tr key={i}>
-      <td>{myrecord[i].empId}</td>
-      <td>{myrecord[i].name}</td>
-      <td>{myrecord[i].In}</td>
-      <td>{myrecord[i].Off}</td>
-    </tr>
-  ));
+  // const listItem = list.map((v, i) => (
+  //   <tr>
+  //     <td>{list.empId}</td>
+  //     <td>{list.name}</td>
+  //     <td>{list.In}</td>
+  //     <td>{list.Off}</td>
+  //   </tr>
+  // ));
   function handleIn() {
-    const hasIn = list.filter((x) => x.date === date && x.name === userName);
-    console.log(hasIn);
-    if (hasIn.length > 0 ) {
-       alert("今日已有簽到紀錄");
-    } else {fetch(`http://localhost:3001/clock`, {
+    const now = new Date().toLocaleTimeString();
+    if (list) {
+      alert("今日已有簽到紀錄");
+    } else {
+      fetch(`http://localhost:3001/clock`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +40,7 @@ function Clock(props) {
         body: JSON.stringify({
           empId: `${userId}`,
           name: `${userName}`,
-          date: `${date}`,
+          date,
           In: `${now}`,
         }),
       })
@@ -52,11 +48,11 @@ function Clock(props) {
         .then(alert("打卡成功"))
         .catch("打卡失敗");
       console.log(now);
-     
     }
   }
   function handleLeave() {
-  const id = myrecord[0].id
+    const now = new Date().toLocaleTimeString();
+    const id = list.id;
     fetch(`http://localhost:3001/clock/${id}`, {
       method: "PATCH",
       headers: {
@@ -77,7 +73,7 @@ function Clock(props) {
     navigate("/");
   };
 
-  return localStorage.getItem("name") ? (
+  return userName ? (
     <Container>
       <h1>{date}</h1>
       <h2>hi, {userName}</h2>
@@ -101,7 +97,20 @@ function Clock(props) {
             <th>下班</th>
           </tr>
         </thead>
-        <tbody>{listItem}</tbody>
+        <tbody>
+          {list ? (
+            <tr>
+              <td>{list.empId}</td>
+              <td>{list.name}</td>
+              <td>{list.In}</td>
+              <td>{list.Off}</td>
+            </tr>
+          ) : (
+            <tr>
+              <td>今日尚未打卡</td>
+            </tr>
+          )}
+        </tbody>
       </Table>
     </Container>
   ) : (

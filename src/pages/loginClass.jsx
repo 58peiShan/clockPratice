@@ -4,7 +4,6 @@ import { Form, Button } from "react-bootstrap";
 class LoginClass extends Component {
   constructor(props) {
     super(props);
-    this.login = this.login.bind(this);
     this.state = {
       user:null,
       employee: [],
@@ -17,16 +16,17 @@ class LoginClass extends Component {
   login = (e) => {
     e.preventDefault();
     let feedback;
+   //先拿到值再到JSON server比對
     if (this.state.account !== "" && this.state.password !== "") {
-      let user = this.state.employee.filter(
-        (x) =>
-          x.name === this.state.account && x.password === this.state.password
-      );
-
-      if (user[0] !== undefined) {
-        localStorage.setItem("name", user[0].name);
-        localStorage.setItem("id", user[0].id);
-        console.log(this);
+      fetch(`http://localhost:3001/employee?name=${this.state.account}`)
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState({ employee: data});
+      });
+      if (this.state.employee.length > 0) {
+        console.log(this.state.employee);
+        localStorage.setItem("name", this.state.employee[0].name);
+        localStorage.setItem("id", this.state.employee[0].id);
         this.setState({ user:true });
       } else {
         feedback = "帳號或密碼輸入錯誤";
@@ -37,14 +37,6 @@ class LoginClass extends Component {
     this.setState({ logintext: feedback });
   };
 
-  componentDidMount() {
-    fetch(`http://localhost:3001/employee`)
-      .then((res) => res.json())
-      .then((data) => {
-        this.setState({ employee: data });
-        console.log(this.state.employee);
-      });
-  }
   render() {
     let { user } = this.state;
     return  (

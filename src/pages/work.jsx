@@ -7,32 +7,35 @@ function Work(props) {
   const [list, setList] = useState([]);
   const [forsearchList, setForsearchList] = useState([]);
   const [date, setDate] = useState();
-  const getRecord = () => {
+
+  useEffect(() => {
     fetch(`http://localhost:3001/clock`)
       .then((res) => res.json())
       .then((data) => {
         setList(data);
         setForsearchList(data);
       });
-  };
-  useEffect(() => {
-    getRecord();
   }, []);
 
   const update = () => {
-    const a = date.replace(/-0/g, "/");
-    const b = a.replace(/-/g, "/");
-    let recordByDate = forsearchList.filter((x) => x.date === b);
+if(date){
+  const searchDate = date.replace(/-0?/g, "/");
+    // const a = date.replace(/-0/g, "/");
+    // const b = a.replace(/-/g, "/");
+    let recordByDate = forsearchList.filter((x) => x.date === searchDate);
     setList(recordByDate);
+}else{
+  alert('請先選擇日期')
+}
   };
   const ListItem = list.map((v, i) => (
     <tbody key={i}>
       <tr>
-        <td>{list[i].empId}</td>
-        <td>{list[i].name}</td>
-        <td>{list[i].date}</td>
-        <td>{list[i].In}</td>
-        <td>{list[i].Off}</td>
+        <td>{v.empId}</td>
+        <td>{v.name}</td>
+        <td>{v.date}</td>
+        <td>{v.In}</td>
+        <td>{v.Off}</td>
       </tr>
     </tbody>
   ));

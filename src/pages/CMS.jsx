@@ -9,7 +9,7 @@ function CMS(props) {
   const [isEdit, setIsEdit] = useState(false);
   const [list, setList] = useState([]);
   const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
+  const [age, setAge] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
@@ -22,7 +22,8 @@ function CMS(props) {
   }, [isListChange]);
 
   function add() {
-    if (name !== "") {
+    console.log(age);
+    if (name !== "" && age !== "") {
       fetch(`http://localhost:3001/employee/`, {
         method: "POST",
         headers: {
@@ -31,20 +32,20 @@ function CMS(props) {
         },
         body: JSON.stringify({
           id: "",
-          name: `${name}`,
-          age: `${age}`,
-          password: `${password}`,
+          name,
+          age,
+          password,
         }),
       })
-        .then(
-          setIsListChange(!isListChange),
-          setName(""),
-          setAge(""),
+        .then(() => {
+          setIsListChange(!isListChange)
+          console.log(`add => ${isListChange}`)
+          setName("")
+          setAge("")
           setPassword("")
-        )
-        .then(console.log(`add => ${isListChange}`));
+        })
     } else {
-      alert("請輸入內容");
+      alert("請檢查內容或格式");
     }
   }
 
@@ -56,9 +57,9 @@ function CMS(props) {
     setName(editObj.name);
     setAge(editObj.age);
     setPassword(editObj.password);
-    console.log(`編輯中嗎？${isEdit}`);
+    //console.log(`編輯中嗎？${isEdit}`);
   };
-  const edit = (e) => {
+  const edit = () => {
     fetch(`http://localhost:3001/employee/${id}`, {
       method: "PATCH",
       headers: {
@@ -66,10 +67,10 @@ function CMS(props) {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        id: `${id}`,
-        name: `${name}`,
-        age: `${age}`,
-        password: `${password}`,
+        id,
+        name,
+        age,
+        password,
       }),
     })
       .then(
@@ -86,15 +87,19 @@ function CMS(props) {
     setAge("");
     setPassword("");
   };
+//沒有反應
+  const handleKeyDown = e=>{
+   if(e.key === 'E'){
+    return false
+    }
+  }
 
   const listItem = list.map((v, i) => (
     <tbody key={i}>
       <tr>
-        <td>{list[i].id}</td>
-        <td>{list[i].name}</td>
-        <td>{list[i].age}</td>
-        {/* <td></td>
-        <td></td> */}
+        <td>{v.id}</td>
+        <td>{v.name}</td>
+        <td>{v.age}</td>
         <td className="project-actions text-right">
           <Button className="btn btn-primary btn-sm " onClick={toEdit}>
             修改
@@ -102,13 +107,13 @@ function CMS(props) {
           <Button
             className="btn btn-danger btn-sm"
             onClick={() =>
-              fetch(`http://localhost:3001/employee/${list[i].id}`, {
+              fetch(`http://localhost:3001/employee/${v.id}`, {
                 method: "DELETE",
                 headers: {
                   "Content-Type": "application/json",
                   Accept: "application/json",
                 },
-                body: JSON.stringify({ id: `${list[i].id}` }),
+                body: JSON.stringify({ id: v.id}),
               }).then(setIsListChange(!isListChange))
             }
           >
@@ -148,8 +153,15 @@ function CMS(props) {
                   value={age}
                   min="1" max="99"
                   aria-describedby="basic-addon1"
-                  onChange={(e) => setAge(e.target.value)}
-                />
+                  onKeyDown={handleKeyDown}
+                  onChange={(e) => {
+                    if(e.target.value.length === 3 ) {return false}
+                       setAge(e.target.value)
+                    console.log(e.target.value)
+                    }
+                  }
+          
+                    />
                 <Form.Control
                   placeholder="預設密碼"
                   type="text"
