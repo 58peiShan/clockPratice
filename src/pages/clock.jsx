@@ -44,6 +44,7 @@ function Clock(props) {
           In: `${now}`,
         }),
       })
+      // 待說明
         .then(()=>{setIsListCgange(!isListCgange)})
         .then(()=>{alert("打卡成功")})
         .catch("打卡失敗");

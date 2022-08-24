@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Form, Container, Button } from "react-bootstrap";
 
 function CMS(props) {
+  // 無用
   const [id, setId] = useState(null);
   const [isListChange, setIsListChange] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -47,7 +48,7 @@ function CMS(props) {
       alert("請輸入內容");
     }
   }
-
+  // 待說明
   const toEdit = (id, e) => {
     //let id = e.target.parentNode.parentNode.firstChild.innerText;
     let editObj = list.filter((x) => x.id === id * 1)[0];
