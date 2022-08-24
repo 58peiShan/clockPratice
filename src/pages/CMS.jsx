@@ -1,21 +1,16 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import { useState } from "react";
 import { Form, Container, Button } from "react-bootstrap";
 
 function CMS(props) {
-  const id = '';
+  const [id, setId] = useState(null);
   const [isListChange, setIsListChange] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [list, setList] = useState([]);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [password, setPassword] = useState("");
-  const idRef = useRef(null);
-
-  // useEffect(() => {
-  //   idRef.current.children[0].focus();
-  // }, []);
 
   useEffect(() => {
     fetch(`http://localhost:3001/employee`)
@@ -53,23 +48,16 @@ function CMS(props) {
     }
   }
 
-  const setRef = useCallback((node)=>{
-    idRef.current = node;
-    console.log(idRef.current);
-  },[])
-
-
-  const toEdit = (e) => {
-    let id = idRef.current;
-    console.log(id);
-    // let id = e.target.parentNode.parentNode.firstChild.innerText;
-    // let editObj = list.filter((x) => x.id === id * 1)[0];
-    // setIsEdit(true);
-    // setId(id);
-    // setName(editObj.name);
-    // setAge(editObj.age);
-    // setPassword(editObj.password);
-    //console.log(`編輯中嗎？${isEdit}`);
+  const toEdit = (id, e) => {
+    //let id = e.target.parentNode.parentNode.firstChild.innerText;
+    let editObj = list.filter((x) => x.id === id * 1)[0];
+    setIsEdit(true);
+    setId(id);
+    setName(editObj.name);
+    setAge(editObj.age);
+    setPassword(editObj.password);
+    console.log(`編輯中嗎？${isEdit}`);
+    return
   };
   const edit = () => {
     fetch(`http://localhost:3001/employee/${id}`, {
@@ -85,14 +73,15 @@ function CMS(props) {
         password,
       }),
     })
-      .then(()=>{
-        setIsListChange(!isListChange)
-        setName("")
-        setAge("")
-        setPassword("")
+      .then(() => {
+        setIsListChange(!isListChange);
+        setName("");
+        setAge("");
+        setPassword("");
       })
-      .then(()=>{alert("修改成功！") },setIsEdit(false) 
-      )
+      .then(() => {
+        alert("修改成功！");
+      }, setIsEdit(false));
   };
   const cancelEdit = () => {
     setIsEdit(false);
@@ -103,37 +92,9 @@ function CMS(props) {
   //沒有用
   const handleKeyDown = (e) => {
     if (e.key === "+") {
-      return false
+      return false;
     }
   };
-
-  const listItem = list.map((v, i) => (
-    <tr key={i} ref={idRef}>
-      <td >{v.id}</td>
-      <td>{v.name}</td>
-      <td>{v.age}</td>
-      <td className="project-actions text-right">
-        <Button className="btn btn-primary btn-sm " onClick={toEdit}>
-          修改
-        </Button>
-        <Button
-          className="btn btn-danger btn-sm"
-          onClick={() =>
-            fetch(`http://localhost:3001/employee/${v.id}`, {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              },
-              body: JSON.stringify({ id: v.id }),
-            }).then(()=>{setIsListChange(!isListChange)})
-          }
-        >
-          刪除
-        </Button>
-      </td>
-    </tr>
-  ));
 
   return (
     <Container>
@@ -214,7 +175,37 @@ function CMS(props) {
                     <th>動作</th>
                   </tr>
                 </thead>
-                <tbody>{listItem}</tbody>
+                <tbody>
+                  {list.map((v, i) => (
+                    <tr key={i}>
+                      <td>{v.id}</td>
+                      <td>{v.name}</td>
+                      <td>{v.age}</td>
+                      <td className="project-actions text-right">
+                        <Button className="btn btn-primary btn-sm" onClick={(e)=>{toEdit(v.id,e)}}>
+                          修改
+                        </Button>
+                        <Button
+                          className="btn btn-danger btn-sm"
+                          onClick={() =>
+                            fetch(`http://localhost:3001/employee/${v.id}`, {
+                              method: "DELETE",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Accept: "application/json",
+                              },
+                              body: JSON.stringify({ id: v.id }),
+                            }).then(() => {
+                              setIsListChange(!isListChange);
+                            })
+                          }
+                        >
+                          刪除
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
           </div>
